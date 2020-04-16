@@ -2,9 +2,14 @@ package cabinvoice;
 
 public class InvoiceService {
 
-    double COST_PER_KILOMETER = 10;
-    int PER_MINUTE_TIME = 1;
-    double MINIMUM_FARE = 5;
+    private final double COST_PER_KILOMETER = 10;
+    private final int PER_MINUTE_TIME = 1;
+    private final double MINIMUM_FARE = 5;
+    private RideRepository rideRepository;
+
+    public InvoiceService() {
+        this.rideRepository = new  RideRepository();
+    }
 
     public double getTotalFare(double distance, int time) {
         double totalFare = COST_PER_KILOMETER*distance+PER_MINUTE_TIME*time;
@@ -17,5 +22,13 @@ public class InvoiceService {
            totalFare += this.getTotalFare(ride.distance,ride.time);
         }
         return new InvoiceSummery(rides.length,totalFare);
+    }
+
+    public void addRides(String userId, Ride[] rides) {
+       rideRepository.addRides(userId,rides);
+    }
+
+    public InvoiceSummery getInvoiceSummery(String userId) {
+        return this.getTotalFare(rideRepository.getRides(userId));
     }
 }

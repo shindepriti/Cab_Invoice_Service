@@ -9,7 +9,7 @@ public class InvoiceServiceTest {
 
     @Before
     public void initialize() {
-    invoiceService = new InvoiceService();
+        invoiceService = new InvoiceService();
     }
 
     @Test
@@ -35,6 +35,16 @@ public class InvoiceServiceTest {
         InvoiceSummery invoiceSummery = invoiceService.getTotalFare(rides);
         InvoiceSummery expectedInvoiceSummery = new InvoiceSummery(2,30);
         Assert.assertEquals(invoiceSummery,expectedInvoiceSummery);
+    }
 
+    @Test
+    public void givenUserId_shouldReturnInvoiceSummery() {
+        String userId = "pri123";
+        Ride[] rides = {new Ride(2.0,5),
+                        new Ride(0.1,1) };
+        invoiceService.addRides(userId,rides);
+        InvoiceSummery invoiceSummery = invoiceService.getInvoiceSummery(userId);
+        InvoiceSummery invoiceSummeryExpected = new InvoiceSummery(2,30);
+        Assert.assertEquals(invoiceSummery,invoiceSummeryExpected);
     }
 }
