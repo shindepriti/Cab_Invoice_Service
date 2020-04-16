@@ -5,7 +5,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class InvoiceServiceTest {
-    InvoiceService invoiceService;
+    private InvoiceService invoiceService;
 
     @Before
     public void initialize() {
@@ -26,6 +26,13 @@ public class InvoiceServiceTest {
         int time = 1;
         double fare = invoiceService.getTotalFare(distance,time);
         Assert.assertEquals(5.0,fare,0.0);
+    }
 
+    @Test
+    public void givenMultipleRides_shouldReturnTotalFare() {
+        Ride[] rides = {new Ride(2.0,5),
+                        new Ride(0.1,1) };
+        double fare = invoiceService.getTotalFare(rides);
+        Assert.assertEquals(30,fare,0.0);
     }
 }

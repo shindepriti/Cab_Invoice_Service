@@ -12,4 +12,12 @@ public class InvoiceService {
             return MINIMUM_FARE;
         return totalFare;
     }
+
+    public double getTotalFare(Ride[] rides) {
+        double totalFare = 0;
+        for (Ride ride:rides) {
+           totalFare += this.getTotalFare(ride.distance,ride.time);
+        }
+        return totalFare;
+    }
 }
