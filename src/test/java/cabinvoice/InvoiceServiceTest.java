@@ -5,46 +5,34 @@ import org.junit.Before;
 import org.junit.Test;
 
 public class InvoiceServiceTest {
+
     private InvoiceService invoiceService;
+    private RideRepository rideRepository;
+    private  Ride[] rides = null;
+    InvoiceSummery expectedInvoiceSummery;
 
     @Before
     public void initialize() {
         invoiceService = new InvoiceService();
-    }
-
-    @Test
-    public void givenDistanceAndTime_shouldReturnTotalFare() {
-        double distance = 2.0;
-        int time = 2;
-        double fare = invoiceService.getTotalFare(distance,time);
-        Assert.assertEquals(22,fare,0.0);
-    }
-
-    @Test
-    public void givenLessDistanceAndTime_shouldReturnMinimumFare() {
-        double distance = 0.1;
-        int time = 1;
-        double fare = invoiceService.getTotalFare(distance,time);
-        Assert.assertEquals(5.0,fare,0.0);
+        rideRepository = new RideRepository();
+        invoiceService.setRideRepository(rideRepository);
+        rides = new Ride[] {
+                new Ride(CabRide.NORMAL,2.0,5),
+                new Ride(CabRide.PREMIUM,0.1,1)};
+        expectedInvoiceSummery = new InvoiceSummery(2,45.0);
     }
 
     @Test
     public void givenMultipleRides_shouldReturnInvoiceSummery() {
-        Ride[] rides = {new Ride(2.0,5),
-                        new Ride(0.1,1) };
         InvoiceSummery invoiceSummery = invoiceService.getTotalFare(rides);
-        InvoiceSummery expectedInvoiceSummery = new InvoiceSummery(2,30);
         Assert.assertEquals(invoiceSummery,expectedInvoiceSummery);
     }
 
     @Test
     public void givenUserId_shouldReturnInvoiceSummery() {
         String userId = "pri123";
-        Ride[] rides = {new Ride(2.0,5),
-                        new Ride(0.1,1) };
         invoiceService.addRides(userId,rides);
         InvoiceSummery invoiceSummery = invoiceService.getInvoiceSummery(userId);
-        InvoiceSummery invoiceSummeryExpected = new InvoiceSummery(2,30);
-        Assert.assertEquals(invoiceSummery,invoiceSummeryExpected);
+        Assert.assertEquals(invoiceSummery,expectedInvoiceSummery);
     }
 }
